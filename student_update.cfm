@@ -12,9 +12,14 @@
     FROM Dogum_Yeri
 </cfquery>
 
-<cfset FOTOGRAF="">
+<cfquery name="image" datasource="students">
+    select FOTOGRAF as deneme from Ogrenciler where OGRENCI_ID= #URL.ID#
+</cfquery>
+
+<cfset FOTOGRAF="#image.deneme#">
+
 <cfif IsDefined ("form.posted")> 
-    <cfif IsDefined("form.file_path")>
+    <cfif Form.angrs == 1>
     <cffile action="UPLOAD" filefield="file_path" destination="#expandPath('images/')#" nameconflict="MAKEUNIQUE">
         <cfoutput>
         File Uploaded! #cffile.ClientFile#
@@ -183,14 +188,15 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Öğrenci Fotograf</label>
-                                    <input class="input--style-4" type="file" name="file_path" value="#FOTOGRAF#"> 
+                                    <input id="customFile" class="input--style-4" type="file" name="file_path" value="#FOTOGRAF#"> 
+                                    <input name="angrs" id="kkln" value="" type="hidden">
                                     <cfimage style="width:300px; height:300px;" action="writetobrowser" source="images/#FOTOGRAF#.jpg" name="myImage">                                    
                                 </div>
                             </div>
                         </div>
                         <div class="p-t-15">
                             <input type = "hidden" name = "posted" value = "<cfoutput>#Now()#</cfoutput>">
-                            <input class="btn btn--radius-2 btn--blue" type = "Submit" name = "" value = "Güncelle"> 
+                            <input onclick="return Valid()" class="btn btn--radius-2 btn--blue" type = "Submit" name = "" value = "Güncelle"> 
                         </div>
                     </cfoutput>
                     </form>
@@ -215,3 +221,17 @@
 </html>
 <!-- end document-->
 
+<script>
+    function Valid() {
+        debugger;
+       var gorsel = $('#customFile');
+       if (gorsel[0].files.length == 0) {
+
+           document.getElementById("kkln").value = "0";
+
+       }else{
+        document.getElementById("kkln").value = "1";
+
+       }
+       }
+</script>
